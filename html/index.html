@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ajax test demo</title>
+
+  <link rel="stylesheet" type="text/css" href="../css/index.css">
+  <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var index = 1;
+      var $btn = $('#loadMore');
+      var $ul = $('.content-list');
+      var $footer = $('.footer');
+
+      $btn.on('click', function(){
+        $.ajax({
+          url: '../static/page' + index + '.json',
+          dataType: 'json'
+        }).done(function(result){
+          if(result.status){
+
+            var html = '';
+            var data = result.data;
+            data.forEach(function(content){
+              html += '<li>' + content + '</li>';
+            });
+            $ul.append($(html));
+
+            if(!result.hasNext){
+              //$btn.attr('disabled', true);
+              $btn.remove();
+              $footer.append('<p>没有更多数据了</p>');
+            }
+
+            index++;
+          }else {
+            alert('加载失败');
+          }
+        }).error(function(){
+          alert('系统错误');
+        })
+      });
+    });
+  </script>
+
+</head>
+<body>
+  <div class="ct">
+    <ul class="content-list">
+      <li>内容1</li>
+      <li>内容2</li>
+    </ul>
+    <div class="footer">
+      <button id=loadMore>加载更多</button>
+    </div>
+    
+  </div>
+</body>
+</html>
